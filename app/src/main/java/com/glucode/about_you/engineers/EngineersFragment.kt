@@ -1,5 +1,6 @@
 package com.glucode.about_you.engineers
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import com.glucode.about_you.mockdata.MockData
 
 class EngineersFragment : Fragment() {
     private lateinit var binding: FragmentEngineersBinding
+    private lateinit var adapter: EngineersRecyclerViewAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,6 +23,16 @@ class EngineersFragment : Fragment() {
         binding = FragmentEngineersBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
         setUpEngineersList(MockData.engineers)
+
+        parentFragmentManager.setFragmentResultListener("profileImageUpdated", this) { _, result ->
+            val engineerName = result.getString("engineerName")
+            val newImageUri = result.getString("newImageUri")
+            //if there is nothing implement the changes to update the name and image
+            if (engineerName != null && newImageUri != null) {
+                updateEngineerImageList(engineerName, newImageUri)
+            }
+        }
+
         return binding.root
     }
 
@@ -30,18 +42,39 @@ class EngineersFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.action_years) {
-            return true
+        when (item.itemId) {
+            R.id.action_years -> {
+                setUpEngineersList(MockData.engineers.sortedBy { it.quickStats.years })
+                return true
+            }
+            R.id.action_coffees -> {
+                setUpEngineersList(MockData.engineers.sortedBy { it.quickStats.coffees })
+                return true
+            }
+            R.id.action_bugs -> {
+                setUpEngineersList(MockData.engineers.sortedBy { it.quickStats.bugs })
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setUpEngineersList(engineers: List<Engineer>) {
+
+     fun setUpEngineersList(engineers: List<Engineer>) {
         binding.list.adapter = EngineersRecyclerViewAdapter(engineers) {
             goToAbout(it)
         }
         val dividerItemDecoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         binding.list.addItemDecoration(dividerItemDecoration)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun updateEngineerImageList(engineerName: String, newImageUri: String) {
+        // Update the image of the corresponding engineer in the list
+        MockData.engineers.find { it.name == engineerName }?.let {
+            it.defaultImageName = newImageUri
+            adapter.notifyDataSetChanged()  // Refresh the list
+        }
     }
 
     private fun goToAbout(engineer: Engineer) {

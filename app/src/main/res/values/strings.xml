@@ -10,4 +10,9 @@
 
     <!--About-->
     <string name="about_screen_title">About</string>
+
+    <!-- Profile view-->
+    <string name="developer_name">Developer Name</string>
+    <string name="developer_role">Developer Role</string>
+    <string name="image_description">This is a image view</string>
 </resources>

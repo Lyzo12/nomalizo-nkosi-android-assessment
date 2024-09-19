@@ -32,12 +32,13 @@ class AnswerCardView @JvmOverloads constructor(
     init {
         val whiteColour = ContextCompat.getColor(context, R.color.white)
         val blackColour = ContextCompat.getColor(context, R.color.black)
+        val transparentColor = ContextCompat.getColor(context, android.R.color.transparent)
         selectedCardBackgroundColor = blackColour
-        selectedTextColor = blackColour
-        deselectedTextColor = whiteColour
+        selectedTextColor = whiteColour
+        deselectedTextColor = blackColour
         radius = resources.getDimension(R.dimen.corner_radius_normal)
         elevation = resources.getDimension(R.dimen.elevation_normal)
-        setCardBackgroundColor(null)
+        setCardBackgroundColor(transparentColor)
     }
 
     override fun setSelected(selected: Boolean) {
@@ -46,7 +47,7 @@ class AnswerCardView @JvmOverloads constructor(
             setCardBackgroundColor(selectedCardBackgroundColor)
             binding.title.setTextColor(selectedTextColor)
         } else {
-            setCardBackgroundColor(null)
+            setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
             binding.title.setTextColor(deselectedTextColor)
         }
     }

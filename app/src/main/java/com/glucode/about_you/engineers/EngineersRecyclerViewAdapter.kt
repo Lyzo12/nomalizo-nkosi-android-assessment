@@ -1,5 +1,6 @@
 package com.glucode.about_you.engineers
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,10 @@ class EngineersRecyclerViewAdapter(
         fun bind(engineer: Engineer, onClick: (Engineer) -> Unit) {
             binding.name.text = engineer.name
             binding.role.text = engineer.role
+
+            if (engineer.defaultImageName.isNotEmpty()) {
+                binding.profileImage.setImageURI(Uri.parse(engineer.defaultImageName))
+            }
             binding.root.setOnClickListener {
                 onClick(engineer)
             }
